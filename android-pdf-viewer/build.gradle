@@ -11,7 +11,7 @@ android {
         minSdk 21  // Updated from original API 11 for better compatibility
         targetSdk 35
         versionCode 1
-        versionName "1.2.0"
+        versionName "1.4.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -60,8 +60,9 @@ android {
 
 dependencies {
     // Core PdfiumAndroid dependency
-//    api 'com.github.barteksc:PdfiumAndroid:1.9.0'
-
+//    api 'com.github.barteksc:PdfiumAndroid:1.9.2'
+//    api 'com.github.meganz:PdfiumAndroid:1.9.2'
+    implementation 'com.github.ironpiyo:PdfiumAndroid:1.9.1'
     // AndroidX dependencies (compatible with SDK 35)
     implementation 'androidx.appcompat:appcompat:1.7.1'
   //  implementation 'androidx.core:core-ktx:1.12.0'
@@ -80,7 +81,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 groupId = 'com.github.sashakhail'
                 artifactId = 'android-pdf-viewer'
-                version = '1.2.0'
+                version = '1.4.0'
 
                 // Use the Android library component
                 from components.findByName('release') ?: components.findByName('default')
