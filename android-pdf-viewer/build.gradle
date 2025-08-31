@@ -1,0 +1,128 @@
+plugins {
+    id 'com.android.library'
+    id 'maven-publish'
+}
+
+android {
+    namespace 'com.github.sashakhail.androidpdfviewer'
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 21  // Updated from original API 11 for better compatibility
+        targetSdk 35
+        versionCode 1
+        versionName "1.1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // Vector drawable support for older versions
+        vectorDrawables.useSupportLibrary = true
+
+        // Native library configuration
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'consumer-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            debuggable true
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+//    kotlinOptions {
+//        jvmTarget = '11'
+//    }
+
+    // Generate sources jar for publishing
+    android.libraryVariants.all { variant ->
+        task("generate${variant.name.capitalize()}Javadoc", type: Javadoc) {
+            description "Generates Javadoc for $variant.name."
+            source = variant.javaCompile.source
+            classpath = files(variant.javaCompile.classpath.files) + files(android.bootClasspath)
+            exclude '**/BuildConfig.java'
+            exclude '**/R.java'
+        }
+    }
+
+}
+
+dependencies {
+    // Core PdfiumAndroid dependency
+//    api 'com.github.barteksc:PdfiumAndroid:1.9.0'
+
+    // AndroidX dependencies (compatible with SDK 35)
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+  //  implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.annotation:annotation:1.9.1'
+
+    // Testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
+}
+
+// Publishing configuration (outside android block)
+afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = 'com.github.sashakhail'
+                artifactId = 'android-pdf-viewer'
+                version = '1.1.0'
+
+                // Use the Android library component
+                from components.findByName('release') ?: components.findByName('default')
+
+                pom {
+                    name = 'Android PDF Viewer'
+                    description = 'Android view for displaying PDFs rendered with PdfiumAndroid'
+                    url = 'https://github.com/sashakhail/AndroidPdfViewer'
+
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'sashakhail'
+                            name = 'Sasha Khail'
+                            email = 'sakkkkka@yahoo.com'
+                        }
+                    }
+
+                    scm {
+                        connection = 'scm:git:git://github.com/sashakhail/AndroidPdfViewer.git'
+                        developerConnection = 'scm:git:ssh://github.com/sashakhail/AndroidPdfViewer.git'
+                        url = 'https://github.com/sashakhail/AndroidPdfViewer'
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                name = "jetpack"
+                url = uri("https://maven.pkg.jetbrains.space/public/p/jetpack/maven")
+                credentials {
+                    username = project.findProperty("jetpack.username") ?: System.getenv("JETPACK_USERNAME")
+                    password = project.findProperty("jetpack.password") ?: System.getenv("JETPACK_PASSWORD")
+                }
+            }
+        }
+    }
+}
