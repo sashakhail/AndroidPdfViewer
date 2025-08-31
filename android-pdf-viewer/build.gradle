@@ -11,7 +11,7 @@ android {
         minSdk 21  // Updated from original API 11 for better compatibility
         targetSdk 35
         versionCode 1
-        versionName "1.1.0"
+        versionName "1.2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -80,7 +80,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 groupId = 'com.github.sashakhail'
                 artifactId = 'android-pdf-viewer'
-                version = '1.1.0'
+                version = '1.2.0'
 
                 // Use the Android library component
                 from components.findByName('release') ?: components.findByName('default')
@@ -114,15 +114,15 @@ afterEvaluate {
             }
         }
 
-        repositories {
-            maven {
-                name = "jetpack"
-                url = uri("https://maven.pkg.jetbrains.space/public/p/jetpack/maven")
-                credentials {
-                    username = project.findProperty("jetpack.username") ?: System.getenv("JETPACK_USERNAME")
-                    password = project.findProperty("jetpack.password") ?: System.getenv("JETPACK_PASSWORD")
-                }
-            }
-        }
+//        repositories {
+//            maven {
+//                name = "jetpack"
+//                url = uri("https://maven.pkg.jetbrains.space/public/p/jetpack/maven")
+//                credentials {
+//                    username = project.findProperty("jetpack.username") ?: System.getenv("JETPACK_USERNAME")
+//                    password = project.findProperty("jetpack.password") ?: System.getenv("JETPACK_PASSWORD")
+//                }
+//            }
+//        }
     }
 }
